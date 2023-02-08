@@ -1,4 +1,4 @@
-package com.github.schm1tz1;
+package com.github.schm1tz1.KafkaTransactionsExampleJava;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -17,9 +17,9 @@ import java.util.Random;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class Main {
+public class ProducerConsumerExample {
 
-    final static String topicName = new String("transactiBons");
+    final static String topicName = new String("transactions");
 
     private static Consumer<String, String> getKafkaConsumer() throws IOException {
         Properties properties = new Properties();
