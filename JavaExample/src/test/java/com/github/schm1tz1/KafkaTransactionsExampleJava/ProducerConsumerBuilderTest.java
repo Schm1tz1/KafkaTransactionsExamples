@@ -3,41 +3,23 @@ package com.github.schm1tz1.KafkaTransactionsExampleJava;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.Duration;
 import java.util.Collections;
-import java.util.Properties;
 import java.util.Random;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class ProducerConsumerExample {
+import static com.github.schm1tz1.KafkaTransactionsExampleJava.ProducerConsumerBuilder.*;
 
-    final static String topicName = new String("transactions");
+class ProducerConsumerBuilderTest {
 
-    private static Consumer<String, String> getKafkaConsumer() throws IOException {
-        Properties properties = new Properties();
-        InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("consumer.properties");
-        properties.load(stream);
-        return new KafkaConsumer<>(properties);
-    }
-
-    private static Producer<String, String> getKafkaProducer() throws IOException {
-        Properties properties = new Properties();
-        InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("producer.properties");
-        properties.load(stream);
-        return new KafkaProducer<>(properties);
-    }
-
-
-    public static void main(String[] args) {
-
+    @Test
+    void testTransactions() {
         try {
             Random rand = new Random();
             int nextInt = rand.nextInt();
@@ -49,10 +31,9 @@ public class ProducerConsumerExample {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
-    private static void consumeTestTransaction() throws IOException {
+    static void consumeTestTransaction() throws IOException {
         Consumer<String, String> consumer = getKafkaConsumer();
         consumer.subscribe(
                 Collections.singleton(topicName)
@@ -63,7 +44,7 @@ public class ProducerConsumerExample {
         consumer.commitSync();
     }
 
-    private static void produceTestTransaction(int identifierNumber, boolean abortTransaction) throws IOException {
+    static void produceTestTransaction(int identifierNumber, boolean abortTransaction) throws IOException {
         Producer<String, String> producer = getKafkaProducer();
         producer.initTransactions();
 
@@ -78,4 +59,5 @@ public class ProducerConsumerExample {
             producer.commitTransaction();
         }
     }
+
 }
